@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Sorry Jhel</title>
+  <style>
+    :root{
+      --bg1:#fff0f3;
+      --bg2:#ffdfe8;
+      --accent:#e63946;
+    }
+    html,body{
+      height:100%; margin:0; padding:0;
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, Arial;
+      background: linear-gradient(to bottom, var(--bg1), var(--bg2));
+      overflow:hidden;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .center {
+      position:relative;
+      z-index:10;
+      height:100vh;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      justify-content:center;
+      gap:16px;
+      pointer-events:none;
+    }
+
+    .title {
+      position:absolute;
+      top:18px;
+      left:50%;
+      transform:translateX(-50%);
+      color:var(--accent);
+      font-size:clamp(24px, 5vw, 34px);
+      text-shadow:0 3px 8px rgba(0,0,0,0.25);
+      z-index:20;
+      pointer-events:auto;
+      font-weight:bold;
+    }
+
+    .photo{
+      width: min(260px, 50vw);
+      height: auto;
+      border-radius:16px;
+      box-shadow: 0 8px 22px rgba(0,0,0,0.18);
+      z-index:15;
+      pointer-events:auto;
+      border:4px solid rgba(255,255,255,0.6);
+    }
+
+    /* waterfall text */
+    .sorry{
+      position:absolute;
+      top:-50px;
+      transform:translateX(-50%);
+      white-space:nowrap;
+      font-weight:700;
+      color:rgba(230,57,70,0.45);
+      font-size:clamp(16px, 3vw, 26px);
+      text-shadow: 0 2px 4px rgba(0,0,0,0.15);
+      pointer-events:none;
+      z-index:3;
+    }
+
+    @keyframes fall {
+      0% { transform: translateX(-50%) translateY(-50px) rotate(0deg); opacity:0.9; }
+      50% { transform: translateX(-50%) translateY(50vh) rotate(15deg); opacity:0.7; }
+      100% { transform: translateX(-50%) translateY(calc(100vh + 60px)) rotate(-15deg); opacity:0; }
+    }
+
+    /* roses */
+    .rose{
+      position:absolute;
+      top:-40px;
+      transform:translateX(-50%);
+      font-size:32px;
+      z-index:2;
+      pointer-events:none;
+    }
+
+    @keyframes roseFall {
+      0% { transform: translateX(-50%) translateY(-50px) rotate(0deg); opacity:1; }
+      50% { transform: translateX(-50%) translateY(50vh) rotate(30deg); opacity:0.8; }
+      100% { transform: translateX(-50%) translateY(calc(100vh + 50px)) rotate(-30deg); opacity:0; }
+    }
+
+    /* hearts */
+    .heart{
+      position:absolute;
+      pointer-events:none;
+      z-index:30;
+      font-size:36px;
+      will-change: transform, opacity;
+      transform: translate(-50%,-50%);
+      --rot: 0deg;
+      animation: floatUp 1.3s cubic-bezier(.2,.9,.2,1) forwards;
+    }
+
+    @keyframes floatUp {
+      0% { transform: translate(-50%,-50%) scale(1) rotate(var(--rot)); opacity:1; }
+      100% { transform: translate(-50%,-250px) scale(1.8) rotate(calc(var(--rot) + 20deg)); opacity:0; }
+    }
+  </style>
+</head>
+<body>
+  <div class="center">
+    <div class="title">Please forgive me — Sorry Jhel 🍀</div>
+    <img class="photo" src="jhel.jpeg" alt="Jhel">
+  </div>
+
+  <script>
+    // ===== RAIN: phrase waterfall =====
+    function createSorry() {
+      const el = document.createElement('div');
+      el.className = 'sorry';
+      el.textContent = 'Please forgive me — Sorry Jhel 🍀';
+      el.style.left = Math.random() * window.innerWidth + 'px';
+      const dur = (3 + Math.random() * 3).toFixed(2);
+      el.style.animation = `fall ${dur}s linear forwards`;
+      document.body.appendChild(el);
+      el.addEventListener('animationend', ()=> el.remove());
+    }
+    setInterval(createSorry, 400);
+
+    // ===== Roses falling =====
+    function createRose() {
+      const rose = document.createElement('div');
+      rose.className = 'rose';
+      rose.textContent = '🌹';
+      rose.style.left = Math.random() * window.innerWidth + 'px';
+      const dur = (4 + Math.random() * 3).toFixed(2);
+      rose.style.fontSize = (24 + Math.random()*20) + 'px';
+      rose.style.animation = `roseFall ${dur}s linear forwards`;
+      document.body.appendChild(rose);
+      rose.addEventListener('animationend', ()=> rose.remove());
+    }
+    setInterval(createRose, 800);
+
+    // ===== HEARTS (2x per click) =====
+    function createHeart(x,y){
+      const heart = document.createElement('div');
+      heart.className = 'heart';
+      heart.textContent = '❤️';
+      heart.style.left = x + 'px';
+      heart.style.top = y + 'px';
+      heart.style.fontSize = (26 + Math.random()*30) + 'px';
+      const rot = Math.floor(Math.random() * 60 - 30) + 'deg';
+      heart.style.setProperty('--rot', rot);
+      document.body.appendChild(heart);
+      heart.addEventListener('animationend', ()=> heart.remove());
+    }
+
+    document.addEventListener('pointerdown', e=>{
+      createHeart(e.clientX, e.clientY);
+      createHeart(e.clientX + (Math.random()*40-20), e.clientY + (Math.random()*30-15));
+    }, {passive:true});
+  </script>
+<script>
+document.addEventListener("click", () => {
+  const music = document.getElementById("bg-music");
+  if (music.paused) {
+    music.play();
+  }
+});
+</script>
+</body>
+<audio id="bg-music" autoplay loop>
+  <source src="love-me-not.mp3" type="audio/mpeg">
+  Your browser does not support the audio element.
+</audio>
+</html>
